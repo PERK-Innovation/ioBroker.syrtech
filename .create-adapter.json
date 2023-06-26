@@ -1,0 +1,42 @@
+{
+	"expert": "no",
+	"cli": false,
+	"adapterName": "syrtech",
+	"title": "SyrTech",
+	"description": "",
+	"keywords": "",
+	"contributors": [
+		"Rush Almosa"
+	],
+	"features": [
+		"adapter"
+	],
+	"adminFeatures": [],
+	"type": "alarm",
+	"startMode": "daemon",
+	"connectionType": "local",
+	"dataSource": "poll",
+	"connectionIndicator": "no",
+	"adapterSettings": [
+		{
+			"key": "ip",
+			"inputType": "text",
+			"defaultValue": ""
+		}
+	],
+	"language": "JavaScript",
+	"adminUi": "json",
+	"releaseScript": "yes",
+	"indentation": "Tab",
+	"quotes": "double",
+	"tools": [
+		"ESLint",
+		"type checking"
+	],
+	"authorName": "Rush Almosa",
+	"authorGithub": "RushAlmosa",
+	"authorEmail": "Rush_lk@hotmail.de",
+	"license": "MIT License",
+	"target": "zip",
+	"creatorVersion": "2.3.0"
+}

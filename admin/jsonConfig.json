@@ -1,0 +1,11 @@
+{
+	"i18n": true,
+	"type": "panel",
+	"items": {
+		"ip": {
+			"type": "text",
+			"label": "ip",
+			"newLine": true
+		}
+	}
+}

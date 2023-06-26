@@ -1,0 +1,85 @@
+{
+	"common": {
+		"name": "syrtech",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "SyrTech",
+		"titleLang": {
+			"en": "SyrTech",
+			"de": "SyrTech",
+			"ru": "SyrTech",
+			"pt": "SyrTech",
+			"nl": "SyrTech",
+			"fr": "SyrTech",
+			"it": "SyrTech",
+			"es": "SyrTech",
+			"pl": "SyrTech",
+			"zh-cn": "SyrTech"
+		},
+		"desc": {
+			"en": "syrtech",
+			"de": "syrtech",
+			"ru": "syrtech",
+			"pt": "syrtech",
+			"nl": "syrtech",
+			"fr": "syrtech",
+			"it": "syrtech",
+			"es": "syrtech",
+			"pl": "syrtech",
+			"zh-cn": "syrtech"
+		},
+		"authors": [
+			"Rush Almosa <Rush_lk@hotmail.de>"
+		],
+		"keywords": [
+			"ioBroker",
+			"template",
+			"Smart Home",
+			"home automation"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "syrtech.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/RushAlmosa/ioBroker.syrtech/main/admin/syrtech.png",
+		"readme": "https://github.com/RushAlmosa/ioBroker.syrtech/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "alarm",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=3.3.22"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.13"
+			}
+		]
+	},
+	"native": {
+		"ip": ""
+	},
+	"objects": [],
+	"instanceObjects": []
+}
