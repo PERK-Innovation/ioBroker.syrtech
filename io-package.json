@@ -41,15 +41,8 @@
 			"pl": "syrtech",
 			"zh-cn": "syrtech"
 		},
-		"authors": [
-			"Rush Almosa <Rush_lk@hotmail.de>"
-		],
-		"keywords": [
-			"ioBroker",
-			"template",
-			"Smart Home",
-			"home automation"
-		],
+		"authors": ["Rush Almosa <Rush_lk@hotmail.de>"],
+		"keywords": ["ioBroker", "template", "Smart Home", "home automation"],
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
@@ -58,8 +51,9 @@
 		"extIcon": "https://raw.githubusercontent.com/RushAlmosa/ioBroker.syrtech/main/admin/syrtech.png",
 		"readme": "https://github.com/RushAlmosa/ioBroker.syrtech/blob/main/README.md",
 		"loglevel": "info",
+		"restartAdapters": ["vis"],
 		"mode": "daemon",
-		"type": "alarm",
+		"type": "visualization-widgets",
 		"compact": true,
 		"connectionType": "local",
 		"dataSource": "poll",
@@ -69,7 +63,8 @@
 		"dependencies": [
 			{
 				"js-controller": ">=3.3.22"
-			}
+			},
+			"vis"
 		],
 		"globalDependencies": [
 			{
@@ -81,5 +76,27 @@
 		"ip": ""
 	},
 	"objects": [],
-	"instanceObjects": []
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		}
+	]
 }

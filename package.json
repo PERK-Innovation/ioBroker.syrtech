@@ -21,7 +21,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:RushAlmosa/ioBroker.syrtech.git"
+    "url": "https://github.com/RushAlmosa/ioBroker.syrtech.git"
   },
   "engines": {
     "node": ">= 14"
@@ -36,18 +36,21 @@
     "@alcalzone/release-script-plugin-manual-review": "^3.5.9",
     "@iobroker/adapter-dev": "^1.2.0",
     "@iobroker/testing": "^4.1.0",
-    "@tsconfig/node14": "^1.0.3",
+    "@tsconfig/node14": "^14.1.0",
     "@types/chai": "^4.3.5",
     "@types/chai-as-promised": "^7.1.5",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^14.18.51",
+    "@types/node": "^14.18.52",
     "@types/proxyquire": "^1.3.28",
     "@types/sinon": "^10.0.15",
     "@types/sinon-chai": "^3.2.9",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "mocha": "^9.2.2",
+    "prettier": "^2.8.8",
     "proxyquire": "^2.1.3",
     "sinon-chai": "^3.7.0",
     "sinon": "^13.0.2",
@@ -58,6 +61,8 @@
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).json",
     "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
     "lib/",
+    "widgets/**/!(tsconfig|tsconfig.*|.eslintrc).json",
+    "widgets/**/*.{html,css,png,svg,jpg,js}",
     "www/",
     "io-package.json",
     "LICENSE",
