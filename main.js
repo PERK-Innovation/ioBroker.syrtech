@@ -12,6 +12,7 @@ const utils = require("@iobroker/adapter-core");
 // const fs = require("fs");
 
 class Syrtech extends utils.Adapter {
+
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
 	 */
@@ -153,6 +154,7 @@ class Syrtech extends utils.Adapter {
 	// 		}
 	// 	}
 	// }
+
 }
 
 if (require.main !== module) {

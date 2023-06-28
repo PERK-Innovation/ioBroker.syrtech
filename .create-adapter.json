@@ -5,8 +5,12 @@
 	"title": "SyrTech",
 	"description": "",
 	"keywords": "",
-	"contributors": ["Rush Almosa"],
-	"features": ["adapter", "vis"],
+	"contributors": [
+		"Rush Almosa"
+	],
+	"features": [
+		"adapter"
+	],
 	"adminFeatures": [],
 	"type": "visualization-widgets",
 	"startMode": "daemon",
@@ -25,7 +29,11 @@
 	"releaseScript": "yes",
 	"indentation": "Tab",
 	"quotes": "double",
-	"tools": ["ESLint", "type checking", "devcontainer", "Prettier"],
+	"tools": [
+		"ESLint",
+		"type checking",
+		"devcontainer"
+	],
 	"authorName": "Rush Almosa",
 	"authorGithub": "RushAlmosa",
 	"authorEmail": "Rush_lk@hotmail.de",

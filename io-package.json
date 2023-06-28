@@ -41,8 +41,15 @@
 			"pl": "syrtech",
 			"zh-cn": "syrtech"
 		},
-		"authors": ["Rush Almosa <Rush_lk@hotmail.de>"],
-		"keywords": ["ioBroker", "template", "Smart Home", "home automation"],
+		"authors": [
+			"Rush Almosa <Rush_lk@hotmail.de>"
+		],
+		"keywords": [
+			"ioBroker",
+			"template",
+			"Smart Home",
+			"home automation"
+		],
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
@@ -51,7 +58,6 @@
 		"extIcon": "https://raw.githubusercontent.com/RushAlmosa/ioBroker.syrtech/main/admin/syrtech.png",
 		"readme": "https://github.com/RushAlmosa/ioBroker.syrtech/blob/main/README.md",
 		"loglevel": "info",
-		"restartAdapters": ["vis"],
 		"mode": "daemon",
 		"type": "visualization-widgets",
 		"compact": true,
@@ -63,8 +69,7 @@
 		"dependencies": [
 			{
 				"js-controller": ">=3.3.22"
-			},
-			"vis"
+			}
 		],
 		"globalDependencies": [
 			{
