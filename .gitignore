@@ -2,7 +2,7 @@
 .*/
 !.vscode/
 !.github/
-!..devcontainer/
+!.devcontainer/
 
 *.code-workspace
 node_modules
