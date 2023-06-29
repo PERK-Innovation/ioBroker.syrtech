@@ -4,6 +4,8 @@
 {
 	"name": "ioBroker Docker Compose",
 
+    "appPort": ["5333:5333"],
+	
 	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
 	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
 	"dockerComposeFile": [ "docker-compose.yml" ],
