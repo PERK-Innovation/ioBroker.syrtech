@@ -59,7 +59,7 @@
 		"readme": "https://github.com/RushAlmosa/ioBroker.syrtech/blob/main/README.md",
 		"loglevel": "info",
 		"mode": "daemon",
-		"type": "visualization-widgets",
+		"type": "alarm",
 		"compact": true,
 		"connectionType": "local",
 		"dataSource": "poll",
@@ -78,7 +78,8 @@
 		]
 	},
 	"native": {
-		"ip": ""
+		"ip": "",
+		"option2": ""
 	},
 	"objects": [],
 	"instanceObjects": [

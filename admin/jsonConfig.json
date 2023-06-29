@@ -6,6 +6,11 @@
 			"type": "text",
 			"label": "ip",
 			"newLine": true
+		},
+		"option2": {
+			"type": "text",
+			"label": "option2",
+			"newLine": true
 		}
 	}
 }
