@@ -7,7 +7,7 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require("@iobroker/adapter-core");
-const axios = require('axios').default;
+const axios = require('axios');
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
@@ -32,8 +32,8 @@ class Syrtech extends utils.Adapter {
 	/**
 	 * Is called when databases are connected and adapter received configuration.
 	 */
-	onReady() {
-		this.setState("info.connection", false, true);
+	async onReady() {
+		this.connectionCheckInterval = setInterval(() => this.checkConnection(), 5000);
 
 		this.log.info("config ip: " + this.config.ip);
 
@@ -54,9 +54,24 @@ class Syrtech extends utils.Adapter {
 
 	onUnload(callback) {
 		try {
+			this.setState("info.connection", false, true);
+			this.log.info("Connection to device lost.");
 			callback();
 		} catch (e) {
 			callback();
+		}
+	}
+
+
+	async checkConnection() {
+		const url = this.getCommandUrl(this.config.ip, "get", "AB", "");
+		try {
+			axios.get(url);
+			this.setState("info.connection", true, true);
+			this.log.info("Connection to device established.");
+		} catch (error) {
+			this.setState("info.connection", false, true);
+			this.log.error("Failed to connect to device: " + error);
 		}
 	}
 
@@ -87,10 +102,10 @@ class Syrtech extends utils.Adapter {
 		return `http://${ipAddress}:5333/safe-tec/${action}/${command}/${parameter}`;
 	}
 
-	setShutoffState(ip, state) {
+	async setShutoffState(ip, state) {
 		const url = this.getCommandUrl(ip, 'set', 'AB', state);
 		const response = axios.get(url);
-		const data = response.data;
+		const data = (await response).data;
 
 		this.log.info(`Response from device: ${JSON.stringify(data)}`);
 
