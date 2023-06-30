@@ -72,6 +72,9 @@ class Syrtech extends utils.Adapter {
 
 		// Update the current profile status when the adapter starts
 		this.getSelectProfile(this.config.ip);
+		
+		// Update the profiles when the adapter starts
+		this.updateProfiles(this.config.ip);
 	}
 
 	onUnload(callback) {
@@ -175,6 +178,48 @@ class Syrtech extends utils.Adapter {
 			}
 		}
 	}
+
+	async updateProfiles(ip) {
+		const existingProfiles = {};
+	
+		// Loop through all 8 profiles
+		for (let i = 1; i <= 8; i++) {
+			const url = this.getCommandUrl(ip, 'get', 'PA' + i, '');
+			const response = await axios.get(url);
+			const data = response.data;
+	
+			this.log.info(`Response from device for profile ${i}: ${JSON.stringify(data)}`);
+	
+			// Create an object for the profile if it doesn't exist yet
+			await this.setObjectNotExistsAsync('profile' + i, {
+				type: 'state',
+				common: {
+					name: `Profile ${i}`,
+					type: 'boolean',
+					role: 'indicator',
+					read: true,
+					write: false,
+				},
+				native: {},
+			});
+	
+			// Check if the profile exists
+			if (data['getPA' + i] === '1') {
+				existingProfiles[i] = true;
+	
+				// Update the state of the profile
+				this.setStateAsync('profile' + i, { val: true, ack: true });
+			} else {
+				existingProfiles[i] = false;
+	
+				// If the profile doesn't exist, set its state to false
+				this.setStateAsync('profile' + i, { val: false, ack: true });
+			}
+		}
+	
+		this.log.info(`Existing profiles: ${JSON.stringify(existingProfiles)}`);
+	}	
+	
 }
 
 if (require.main !== module) {
