@@ -293,14 +293,19 @@ class Syrtech extends utils.Adapter {
 	
 	async updateProfileProperties(ipAddress) {
 		const currentProfile = await this.getCurrentSelectedProfile(ipAddress);
-		const properties = ['PV', 'PT', 'PF', 'PR', 'PM', 'PB', 'PW'];
-		const propertyNames = ['profileVolumeLevel', 'profileTimeLevel', 'profileMaxFlow', 'profileReturnTime', 'profileMicroleakage', 'profileBuzzerOn', 'profileLeakageWarningOn'];
+		const properties = ['PV', 'PT', 'PF', 'PR', 'PM', 'PB', 'PW', 'ALA', 'VLV'];
+		const propertyNames = ['profileVolumeLevel', 'profileTimeLevel', 'profileMaxFlow', 'profileReturnTime', 'profileMicroleakage', 'profileBuzzerOn', 'profileLeakageWarningOn', 'ongoingAlarm', 'currentValveStatus'];
 	
 		for (let i = 0; i < properties.length; i++) {
 			const property = properties[i];
 			const propertyName = propertyNames[i];
 			try {
-				const url = this.getCommandUrl(ipAddress, "get", property + currentProfile, "");
+				let url;
+				if (property === 'ALA' || property === 'VLV') {
+					url = this.getCommandUrl(ipAddress, "get", property, "");
+				} else {
+					url = this.getCommandUrl(ipAddress, "get", property + currentProfile, "");
+				}
 				this.log.info(`Fetching URL: ${url}`);  // Log the URL being fetched
 				const response = await axios.get(url);
 				const data = response.data;
@@ -321,13 +326,78 @@ class Syrtech extends utils.Adapter {
 				});
 	
 				// Update the state of the property
-				this.setStateAsync(propertyName, { val: data['get' + property + currentProfile], ack: true });
+				let value;
+				if (property === 'ALA') {
+					value = this.getAlarmMeaning(data['get' + property]);
+				} else if (property === 'VLV') {
+					value = this.getValveStatusMeaning(data['get' + property]);
+				} else {
+					value = data['get' + property + currentProfile];
+				}
+				this.setStateAsync(propertyName, { val: value, ack: true });
 			} catch (error) {
 				this.log.error(`Error updating profile property ${property}: ${error}`);
 			}
 		}
 	}
 	
+	// Method to convert alarm code to its meaning
+	getAlarmMeaning(alarmCode) {
+		switch (alarmCode) {
+			case "FF":
+				return "NO ALARM";
+			case "A1":
+				return "ALARM END SWITCH";
+			case "A2":
+				return "NO NETWORK";
+			case "A3":
+				return "ALARM VOLUME LEAKAGE";
+			case "A4":
+				return "ALARM TIME LEAKAGE";
+			case "A5":
+				return "ALARM MAX FLOW LEAKAGE";
+			case "A6":
+				return "ALARM MICRO LEAKAGE";
+			case "A7":
+				return "ALARM EXT. SENSOR LEAKAGE";
+			case "A8":
+				return "ALARM TURBINE BLOCKED";
+			case "A9":
+				return "ALARM PRESSURE SENSOR ERROR";
+			case "AA":
+				return "ALARM TEMPERATURE SENSOR ERROR";
+			case "AB":
+				return "ALARM CONDUCTIVITY SENSOR ERROR";
+			case "AC":
+				return "ALARM TO HIGH CONDUCTIVITY";
+			case "AD":
+				return "LOW BATTERY";
+			case "AE":
+				return "WARNING VOLUME LEAKAGE";
+			case "AF":
+				return "ALARM NO POWER SUPPLY";
+			default:
+				return "Unknown alarm code";
+		}
+	}
+
+	// Method to convert valve status code to its meaning
+	getValveStatusMeaning(valveStatusCode) {
+		switch (valveStatusCode) {
+			case "10":
+				return "Closed";
+			case "11":
+				return "Closing";
+			case "20":
+				return "Open";
+			case "21":
+				return "Opening";
+			case "30":
+				return "Undefined";
+			default:
+				return "Unknown valve status code";
+		}
+	}
 }
 
 if (require.main !== module) {
