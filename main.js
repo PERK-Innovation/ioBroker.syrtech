@@ -27,7 +27,7 @@ class Syrtech extends utils.Adapter {
 		// this.on("objectChange", this.onObjectChange.bind(this));
 		// this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
-	} 
+	}
 
 	/**
 	 * Is called when databases are connected and adapter received configuration.
@@ -45,11 +45,33 @@ class Syrtech extends utils.Adapter {
 				role: "indicator",
 				read: true,
 				write: true,
+				states: {
+					1: "Closed",
+					2: "Open"
+				}
+			},
+			native: {},
+		});
+
+		this.setObjectNotExistsAsync("selectProfile", {
+			type: "state",
+			common: {
+				name: "Select Profile",
+				type: "number",
+				role: "indicator",
+				read: true,
+				write: true,
+				min: 1,
+				max: 8
 			},
 			native: {},
 		});
 
 		this.subscribeStates("shutoffState");
+		this.subscribeStates("selectProfile");
+
+		// Update the current profile status when the adapter starts
+		this.getSelectProfile(this.config.ip);
 	}
 
 	onUnload(callback) {
@@ -62,12 +84,12 @@ class Syrtech extends utils.Adapter {
 		}
 	}
 
-
 	async checkConnection() {
 		const url = this.getCommandUrl(this.config.ip, "get", "AB", "");
 		try {
 			axios.get(url);
 			this.setState("info.connection", true, true);
+			clearInterval(this.connectionCheckInterval);
 			this.log.info("Connection to device established.");
 		} catch (error) {
 			this.setState("info.connection", false, true);
@@ -93,6 +115,15 @@ class Syrtech extends utils.Adapter {
 					this.log.error(`Error setting shutoff state: ${error}`);
 				}
 			}
+
+			if (id.endsWith('selectProfile') && !state.ack) {
+				try {
+					const newProfile = state.val;
+					this.setSelectProfile(this.config.ip, newProfile);
+				} catch (error) {
+					this.log.error(`Error setting select profile: ${error}`);
+				}
+			}
 		} else {
 			this.log.info(`state ${id} deleted`);
 		}
@@ -112,6 +143,38 @@ class Syrtech extends utils.Adapter {
 		this.setStateAsync('shutoffState', { val: state, ack: true });
 	}
 
+	async setSelectProfile(ip, profile) {
+		const url = this.getCommandUrl(ip, 'set', 'PRF', profile);
+		const response = await axios.get(url);
+		const data = response.data;
+
+		this.log.info(`Response from device: ${JSON.stringify(data)}`);
+
+		if (data['setPRF' + profile] === 'OK') {
+			// Update the profile state in ioBroker after successfully changing the profile
+			await this.getSelectProfile(ip);
+		}
+	}
+
+
+	async getSelectProfile(ip) {
+		const url = this.getCommandUrl(ip, 'get', 'PRF', '');
+		const response = await axios.get(url);
+		const data = response.data;
+
+		this.log.info(`Response from device: ${JSON.stringify(data)}`);
+
+		if (data.getPRF) {
+			this.setStateAsync('selectProfile', { val: data.getPRF, ack: true });
+		} else {
+			for (let i = 1; i <= 8; i++) {
+				if (data['setPRF' + i] === 'OK') {
+					this.setStateAsync('selectProfile', { val: i, ack: true });
+					break;
+				}
+			}
+		}
+	}
 }
 
 if (require.main !== module) {
