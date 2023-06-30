@@ -86,18 +86,18 @@ class Syrtech extends utils.Adapter {
 		this.updateAll();
 	}
 
-	updateAll() {
+	async updateAll() {
 		// Update the current profile status when the adapter starts
-		this.getSelectProfile(this.config.ip);
+		await this.getSelectProfile(this.config.ip);
 		
 		// Update the profiles when the adapter starts
-		this.updateProfiles(this.config.ip);
+		await this.updateProfiles(this.config.ip);
 
 		// Update the profiles name when the adapter starts
-		this.updateProfileNameStatus(this.config.ip);
+		await this.updateProfileNameStatus(this.config.ip);
 
 		// Update the profiles properties when the adapter starts
-		this.updateProfileProperties(this.config.ip);
+		await this.updateProfileProperties(this.config.ip);
 	}
 
 	onUnload(callback) {
