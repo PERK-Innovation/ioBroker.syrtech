@@ -1,3 +1,30 @@
+Guid:
+Debugstarten:
+node --inspect main.js --force --logs
+
+-----
+
+Es sieht so aus, als ob Sie das Paket `@tsconfig/node14` in Ihren Entwicklungsabhängigkeiten haben, aber es scheint nicht gefunden zu werden. Hier sind ein paar Schritte, die das Problem beheben könnten:
+
+1. Versuchen Sie zuerst, Ihre `node_modules` zu löschen und die Abhängigkeiten erneut zu installieren. Manchmal können diese Probleme auftreten, wenn die `node_modules`-Struktur beschädigt ist oder wenn Pakete nicht korrekt gelinkt sind. Sie können das tun, indem Sie die folgenden Befehle in Ihrem Terminal ausführen:
+
+```bash
+rm -rf node_modules
+npm install
+```
+
+6. Wenn nichts davon funktioniert, können Sie versuchen, das `@tsconfig/node14`-Paket manuell zu aktualisieren oder zu einer älteren Version zurückzukehren, um zu sehen, ob das Problem dadurch behoben wird. Sie können das Paket mit dem folgenden Befehl aktualisieren:
+
+```bash
+npm install --save-dev @tsconfig/node14@latest
+```
+
+Ich hoffe, dass einer dieser Schritte Ihnen hilft, das Problem zu beheben. Bitte lassen Sie mich wissen, wenn Sie weitere Fragen haben.
+
+
+
+
+
 ![Logo](admin/syrtech.png)
 # ioBroker.syrtech
 
