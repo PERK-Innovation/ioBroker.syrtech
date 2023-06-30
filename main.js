@@ -83,13 +83,21 @@ class Syrtech extends utils.Adapter {
 		this.subscribeStates("selectProfile");
 		this.subscribeStates("profileName");
 
+		this.updateAll();
+	}
+
+	updateAll() {
 		// Update the current profile status when the adapter starts
 		this.getSelectProfile(this.config.ip);
 		
 		// Update the profiles when the adapter starts
 		this.updateProfiles(this.config.ip);
 
+		// Update the profiles name when the adapter starts
 		this.updateProfileNameStatus(this.config.ip);
+
+		// Update the profiles properties when the adapter starts
+		this.updateProfileProperties(this.config.ip);
 	}
 
 	onUnload(callback) {
@@ -180,7 +188,8 @@ class Syrtech extends utils.Adapter {
 
 		if (data['setPRF' + profile] === 'OK') {
 			// Update the profile state in ioBroker after successfully changing the profile
-			await this.getSelectProfile(ip);
+			// await this.getSelectProfile(ip);
+			await this.updateAll();
 		}
 	}
 
@@ -282,6 +291,42 @@ class Syrtech extends utils.Adapter {
 		return data.getPRF;
 	}
 	
+	async updateProfileProperties(ipAddress) {
+		const currentProfile = await this.getCurrentSelectedProfile(ipAddress);
+		const properties = ['PV', 'PT', 'PF', 'PR', 'PM', 'PB', 'PW'];
+		const propertyNames = ['profileVolumeLevel', 'profileTimeLevel', 'profileMaxFlow', 'profileReturnTime', 'profileMicroleakage', 'profileBuzzerOn', 'profileLeakageWarningOn'];
+	
+		for (let i = 0; i < properties.length; i++) {
+			const property = properties[i];
+			const propertyName = propertyNames[i];
+			try {
+				const url = this.getCommandUrl(ipAddress, "get", property + currentProfile, "");
+				this.log.info(`Fetching URL: ${url}`);  // Log the URL being fetched
+				const response = await axios.get(url);
+				const data = response.data;
+	
+				this.log.info(`Response from device for property ${property}: ${JSON.stringify(data)}`);
+	
+				// Create an object for the property if it doesn't exist yet
+				await this.setObjectNotExistsAsync(propertyName, {
+					type: 'state',
+					common: {
+						name: propertyName,
+						type: 'string',
+						role: 'indicator',
+						read: true,
+						write: false,
+					},
+					native: {},
+				});
+	
+				// Update the state of the property
+				this.setStateAsync(propertyName, { val: data['get' + property + currentProfile], ack: true });
+			} catch (error) {
+				this.log.error(`Error updating profile property ${property}: ${error}`);
+			}
+		}
+	}
 	
 }
 
