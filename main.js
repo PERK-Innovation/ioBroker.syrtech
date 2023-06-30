@@ -67,14 +67,29 @@ class Syrtech extends utils.Adapter {
 			native: {},
 		});
 
+		this.setObjectNotExistsAsync("profileName", {
+			type: "state",
+			common: {
+				name: "Profile Name",
+				type: "string",
+				role: "indicator",
+				read: true,
+				write: true
+			},
+			native: {},
+		});
+
 		this.subscribeStates("shutoffState");
 		this.subscribeStates("selectProfile");
+		this.subscribeStates("profileName");
 
 		// Update the current profile status when the adapter starts
 		this.getSelectProfile(this.config.ip);
 		
 		// Update the profiles when the adapter starts
 		this.updateProfiles(this.config.ip);
+
+		this.updateProfileNameStatus(this.config.ip);
 	}
 
 	onUnload(callback) {
@@ -127,6 +142,16 @@ class Syrtech extends utils.Adapter {
 					this.log.error(`Error setting select profile: ${error}`);
 				}
 			}
+
+			if (id.endsWith('profileName') && !state.ack) {
+				try {
+					const newName = state.val;
+					this.setProfileNameStatus(this.config.ip, newName);
+				} catch (error) {
+					this.log.error(`Error setting profile name: ${error}`);
+				}
+			}
+			
 		} else {
 			this.log.info(`state ${id} deleted`);
 		}
@@ -219,6 +244,44 @@ class Syrtech extends utils.Adapter {
 	
 		this.log.info(`Existing profiles: ${JSON.stringify(existingProfiles)}`);
 	}	
+	
+	updateProfileNameChannel(response) {
+		const keys = Object.keys(response);
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			if (key.startsWith("getPN")) {
+				let profileName = response[key];
+				profileName = profileName.slice(0, -1); // Remove the trailing slash
+				this.setStateAsync('profileName', { val: profileName, ack: true });
+				break;
+			}
+		}
+	}
+	
+	
+	async updateProfileNameStatus(ipAddress) {
+		const selectedProfile = await this.getCurrentSelectedProfile(ipAddress);
+		const url = this.getCommandUrl(ipAddress, "get", "PN" + selectedProfile, "");
+		const response = await axios.get(url);
+		const data = response.data; // Changed this line
+		this.updateProfileNameChannel(data);
+	}
+	
+	async setProfileNameStatus(ipAddress, newName) {
+		const selectedProfile = await this.getCurrentSelectedProfile(ipAddress);
+		const url = this.getCommandUrl(ipAddress, "set", "PN" + selectedProfile + "/" + newName, "");
+		const response = await axios.get(url);
+		const data = response.data; // Changed this line
+		this.updateProfileNameChannel(data);
+	}
+	
+	async getCurrentSelectedProfile(ipAddress) {
+		const url = this.getCommandUrl(ipAddress, "get", "PRF", "");
+		const response = await axios.get(url);
+		const data = response.data; // Changed this line
+		return data.getPRF;
+	}
+	
 	
 }
 
